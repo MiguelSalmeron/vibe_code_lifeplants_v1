@@ -1,0 +1,28 @@
+.banner {
+  background-color: var(--color-accent-9);
+  color: var(--color-accent-contrast);
+  padding: var(--space-3) var(--space-5);
+  text-align: center;
+  font-size: var(--font-size-1);
+  font-weight: 500;
+  position: relative;
+  z-index: 100;
+}
+
+.banner a {
+  color: inherit;
+  text-decoration: underline;
+  font-weight: 600;
+  transition: opacity 0.2s var(--ease);
+}
+
+.banner a:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+  .banner {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-0);
+  }
+}

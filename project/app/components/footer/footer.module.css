@@ -1,0 +1,204 @@
+.footer {
+  background-color: var(--color-neutral-2);
+  border-top: 1px solid var(--color-neutral-5);
+  padding: var(--space-8) 0 var(--space-6);
+  margin-top: var(--space-9);
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.logoSection {
+  margin-bottom: var(--space-8);
+  text-align: center;
+}
+
+.footerLogo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  margin-bottom: var(--space-3);
+  transition: transform 0.3s ease;
+}
+
+.footerLogo:hover {
+  transform: translateY(-2px);
+}
+
+.footerLogoImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.footerLogo:hover .footerLogoImage {
+  transform: rotate(5deg) scale(1.05);
+  box-shadow: 0 4px 12px rgba(48, 164, 108, 0.2);
+}
+
+.footerLogoText {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-neutral-12);
+}
+
+.tagline {
+  color: var(--color-neutral-10);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-7);
+  margin-bottom: var(--space-8);
+}
+
+.column h3 {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-neutral-12);
+  margin-bottom: var(--space-4);
+}
+
+.links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.link {
+  color: var(--color-neutral-11);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition: color 0.2s ease;
+  display: inline-block;
+}
+
+.link:hover {
+  color: var(--color-accent-9);
+}
+
+.infoText {
+  color: var(--color-neutral-10);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin-bottom: var(--space-2);
+}
+
+.infoButton {
+  display: inline-flex;
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-neutral-6);
+  border-radius: var(--radius-2);
+  color: var(--color-neutral-11);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.infoButton:hover {
+  border-color: var(--color-accent-9);
+  color: var(--color-accent-11);
+  background-color: var(--color-accent-2);
+}
+
+.donateLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  background: linear-gradient(135deg, var(--color-accent-9), var(--color-accent-10));
+  color: var(--color-accent-contrast);
+  text-decoration: none;
+  border-radius: var(--radius-2);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.donateLink:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, var(--color-accent-10), var(--color-accent-11));
+}
+
+.heartIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.socialIcons {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-2);
+  background-color: var(--color-neutral-4);
+  color: var(--color-neutral-11);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.socialLink:hover {
+  background-color: var(--color-accent-9);
+  color: var(--color-accent-contrast);
+}
+
+.socialIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.bottom {
+  border-top: 1px solid var(--color-neutral-5);
+  padding-top: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: center;
+  text-align: center;
+}
+
+.copyright {
+  color: var(--color-neutral-10);
+  font-size: 0.875rem;
+}
+
+.attribution {
+  color: var(--color-neutral-9);
+  font-size: 0.8125rem;
+}
+
+@media (min-width: 768px) {
+  .bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}

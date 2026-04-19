@@ -1,0 +1,18 @@
+{
+  "hosting": {
+    "site": "life--plants-app",
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "redirects": [
+      { "source": "/raiz.html", "destination": "/ia", "type": 301 }
+    ],
+    "rewrites": [
+      { "source": "/ia", "destination": "/raiz.html" },
+      { "source": "/api/chat", "function": "chat" }
+    ]
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs20"
+  }
+}

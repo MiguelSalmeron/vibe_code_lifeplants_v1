@@ -1,0 +1,138 @@
+.hero {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: var(--color-neutral-12);
+}
+
+.background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.backgroundImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5));
+  z-index: 1;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+  text-align: center;
+  color: white;
+}
+
+.title {
+  font: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  margin-bottom: var(--space-5);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+  line-height: 1.1;
+}
+
+.motto {
+  font-family: var(--font-subheading);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-neutral-12);
+  margin: 0 0 var(--space-4);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+  font: var(--font-subheading);
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  max-width: 800px;
+  margin: 0 auto var(--space-7);
+  opacity: 0.95;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+  line-height: 1.6;
+}
+
+.scrollIndicator {
+  position: absolute;
+  bottom: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  color: white;
+  opacity: 0.8;
+  animation: bounce 2s var(--ease-in-out) infinite;
+}
+
+.scrollIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.scrollText {
+  font-size: var(--font-size-0);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Scroll Animations */
+.hidden {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.fadeInUp {
+  animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 70vh;
+  }
+
+  .content {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .title {
+    margin-bottom: var(--space-4);
+  }
+
+  .subtitle {
+    margin-bottom: var(--space-6);
+  }
+
+  .scrollIndicator {
+    bottom: var(--space-4);
+  }
+}

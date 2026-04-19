@@ -1,0 +1,18 @@
+{
+  "name": "raiz-functions",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "set-admin-claim": "node scripts/set-admin-claim.js",
+    "clear-admin-claim": "node scripts/clear-admin-claim.js"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "dependencies": {
+    "@google-cloud/text-to-speech": "^6.4.0",
+    "@google-cloud/vertexai": "^1.10.0",
+    "firebase-admin": "^12.7.0",
+    "firebase-functions": "^7.2.3"
+  }
+}

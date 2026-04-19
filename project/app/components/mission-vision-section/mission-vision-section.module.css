@@ -1,0 +1,78 @@
+.section {
+  padding: var(--space-9) var(--space-6);
+  background: linear-gradient(135deg, var(--color-accent-2) 0%, var(--color-neutral-2) 100%);
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-7);
+}
+
+.card {
+  padding: var(--space-7);
+  background-color: var(--color-neutral-1);
+  border-radius: var(--radius-4);
+  border: 2px solid var(--color-accent-5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: var(--color-accent-7);
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  color: var(--color-accent-9);
+  margin-bottom: var(--space-4);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-accent-11);
+  margin: 0 0 var(--space-4);
+}
+
+.description {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-neutral-11);
+  margin: 0;
+}
+
+/* Scroll Animations */
+.hidden {
+  opacity: 0;
+}
+
+.fadeInStagger {
+  animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.fadeInStagger > .card {
+  opacity: 0;
+  animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

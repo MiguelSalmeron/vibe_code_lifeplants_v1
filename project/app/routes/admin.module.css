@@ -1,0 +1,97 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f3f8f4 0%, #e5efe8 100%);
+  padding: 1.5rem;
+}
+
+.shell,
+.card {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #d6e3d8;
+  border-radius: 1rem;
+  padding: 1.2rem;
+}
+
+.header {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #dbe7de;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
+.header h1 {
+  margin: 0;
+}
+
+.header p {
+  margin: 0.25rem 0 0;
+  color: #5f7467;
+}
+
+.nav {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.nav a,
+.nav button,
+.linkButton,
+.form button,
+.actions button {
+  border: 1px solid #2c6d47;
+  background: #2c6d47;
+  color: #ffffff;
+  border-radius: 0.6rem;
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.form label {
+  display: grid;
+  gap: 0.35rem;
+  color: #334b3b;
+}
+
+.form input {
+  border: 1px solid #bcd0c0;
+  border-radius: 0.5rem;
+  padding: 0.55rem;
+}
+
+.error {
+  color: #af1f1f;
+  margin: 0;
+}
+
+.debugInfo {
+  margin: 0.25rem 0 0.75rem;
+  color: #5f7467;
+  font-size: 0.88rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.googleButton {
+  background: #ffffff !important;
+  color: #4285f4 !important;
+  border-color: #4285f4 !important;
+}
+
+.googleButton:hover {
+  background: #f1f3f4 !important;
+}

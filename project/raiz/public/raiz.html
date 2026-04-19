@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAIZ — Lifeplants AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --soil:   #1a1208;
+    --bark:   #2e1f0e;
+    --moss:   #3d5c2a;
+    --leaf:   #5a8a3a;
+    --sprout: #8fbe5a;
+    --pollen: #d4e8a0;
+    --cream:  #faf8f2;
+    --fade:   #7a6e5a;
+  }
+
+  html, body { height: 100%; background: var(--soil); color: var(--cream); font-family: 'DM Mono', monospace; font-weight: 300; overflow: hidden; }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 90%, #2e1f0e88 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 90% 10%, #3d5c2a44 0%, transparent 55%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .shell {
+    position: relative; z-index: 1;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    border-right: 1px solid #ffffff0d;
+    display: flex; flex-direction: column;
+    padding: 36px 24px;
+    gap: 28px;
+  }
+
+  .brand-name {
+    font-family: 'Fraunces', serif;
+    font-size: 40px; font-weight: 500;
+    letter-spacing: -1px;
+    color: var(--sprout); line-height: 1;
+  }
+
+  .brand-name span { font-style: italic; color: var(--pollen); }
+
+  .brand-sub {
+    font-size: 9px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--fade);
+    margin-top: 5px;
+  }
+
+  .divider { height: 1px; background: linear-gradient(90deg, #ffffff1a 0%, transparent 100%); }
+
+  .about-label {
+    font-size: 9px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--leaf);
+    margin-bottom: 8px;
+  }
+
+  .about-text {
+    font-size: 12px; line-height: 1.7;
+    color: #c4b89677;
+    font-family: 'Fraunces', serif;
+    font-weight: 300; font-style: italic;
+  }
+
+  .topics { display: flex; flex-direction: column; gap: 7px; }
+
+  .topic-chip {
+    font-size: 11px; color: var(--fade);
+    padding: 7px 11px;
+    border: 1px solid #ffffff0d; border-radius: 4px;
+    cursor: pointer; transition: all 0.2s;
+    background: transparent; text-align: left;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .topic-chip:hover { border-color: var(--moss); color: var(--pollen); background: #3d5c2a18; }
+  .topic-chip::before { content: '↳ '; color: var(--leaf); opacity: 0.6; }
+
+  .sidebar-footer {
+    margin-top: auto;
+    font-size: 10px; color: #ffffff15; line-height: 1.6;
+  }
+
+  .sidebar-footer a { color: var(--leaf); text-decoration: none; opacity: 0.5; }
+
+  /* ── Main ── */
+  .main { display: flex; flex-direction: column; height: 100vh; }
+
+  .chat-header {
+    padding: 22px 36px 18px;
+    border-bottom: 1px solid #ffffff08;
+    display: flex; align-items: center; gap: 14px;
+  }
+
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--sprout);
+    box-shadow: 0 0 8px var(--sprout)66;
+    flex-shrink: 0;
+  }
+
+  .header-title { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 300; color: var(--cream); }
+  .header-sub { font-size: 10px; color: var(--fade); letter-spacing: 0.08em; margin-top: 1px; }
+
+  .header-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  .beta-pill {
+    border-radius: 999px;
+    border: 1px solid #d4e8a066;
+    background: #8fbe5a1f;
+    color: var(--pollen);
+    padding: 5px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+  }
+
+  /* ── Messages ── */
+  .messages {
+    flex: 1; overflow-y: auto;
+    padding: 28px 36px;
+    display: flex; flex-direction: column; gap: 22px;
+    scroll-behavior: smooth;
+  }
+
+  .messages::-webkit-scrollbar { width: 3px; }
+  .messages::-webkit-scrollbar-thumb { background: #ffffff15; border-radius: 2px; }
+
+  .empty-state {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 16px; text-align: center; padding: 40px;
+  }
+
+  .empty-glyph {
+    font-family: 'Fraunces', serif;
+    font-size: 56px; color: #3d5c2a44;
+    line-height: 1; font-style: italic;
+  }
+
+  .empty-text {
+    font-family: 'Fraunces', serif;
+    font-size: 17px; font-weight: 300; font-style: italic;
+    color: var(--fade); max-width: 280px; line-height: 1.6;
+  }
+
+  .msg { display: flex; gap: 12px; animation: msgIn 0.28s ease-out; }
+  .msg.user { flex-direction: row-reverse; }
+
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(7px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg-avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+  }
+
+  .msg.raiz .msg-avatar {
+    background: #3d5c2a44; border: 1px solid #3d5c2a88;
+    color: var(--sprout);
+    font-family: 'Fraunces', serif; font-style: italic;
+  }
+
+  .msg.user .msg-avatar {
+    background: #ffffff08; border: 1px solid #ffffff12;
+    color: var(--fade); font-size: 9px; letter-spacing: 0.05em;
+  }
+
+  .msg-bubble {
+    max-width: 70%; padding: 13px 17px;
+    font-size: 13.5px; line-height: 1.75;
+  }
+
+  .msg-content {
+    max-width: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .msg-actions {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .msg-action-btn {
+    border: 1px solid #ffffff1a;
+    background: #ffffff08;
+    color: var(--fade);
+    border-radius: 6px;
+    height: 28px;
+    min-width: 28px;
+    font-size: 11px;
+    padding: 0 8px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+
+  .msg-action-btn:hover {
+    border-color: #5a8a3a88;
+    color: var(--pollen);
+    background: #3d5c2a22;
+  }
+
+  .msg-action-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .msg.raiz .msg-bubble {
+    background: #ffffff07; border: 1px solid #ffffff0a;
+    color: var(--cream);
+    border-radius: 2px 12px 12px 12px;
+  }
+
+  .msg.user .msg-bubble {
+    background: #3d5c2a33; border: 1px solid #5a8a3a33;
+    color: var(--pollen);
+    border-radius: 12px 2px 12px 12px;
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+  }
+
+  .typing-dots { display: flex; gap: 5px; align-items: center; padding: 4px 0; }
+  .typing-dots span {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--leaf);
+    animation: dot 1.2s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes dot {
+    0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+    40%            { opacity: 1;   transform: scale(1); }
+  }
+
+  /* ── Input ── */
+  .input-area { padding: 16px 36px 24px; border-top: 1px solid #ffffff08; }
+  .input-row { display: flex; gap: 10px; align-items: flex-end; }
+
+  .chat-input {
+    flex: 1;
+    background: #ffffff07; border: 1px solid #ffffff12; border-radius: 8px;
+    padding: 13px 16px;
+    font-family: 'Fraunces', serif; font-size: 14px;
+    font-weight: 300; font-style: italic;
+    color: var(--cream); outline: none; resize: none;
+    min-height: 50px; max-height: 130px;
+    transition: border-color 0.2s; line-height: 1.5;
+  }
+
+  .chat-input:focus { border-color: var(--moss); }
+  .chat-input::placeholder { color: #ffffff22; }
+
+  .send-btn {
+    background: var(--moss); border: none; border-radius: 8px;
+    width: 50px; height: 50px;
+    cursor: pointer; color: var(--pollen); font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, transform 0.1s; flex-shrink: 0;
+  }
+
+  .send-btn:hover { background: var(--leaf); }
+  .send-btn:active { transform: scale(0.95); }
+  .send-btn:disabled { background: #ffffff10; color: #ffffff20; cursor: not-allowed; }
+
+  .voice-btn,
+  .voice-mode-btn {
+    background: #ffffff09;
+    border: 1px solid #ffffff1f;
+    border-radius: 8px;
+    min-height: 50px;
+    padding: 0 12px;
+    color: var(--cream);
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+  }
+
+  .voice-btn:hover,
+  .voice-mode-btn:hover {
+    border-color: #5a8a3a88;
+    background: #3d5c2a22;
+  }
+
+  .voice-btn.active {
+    border-color: #e0706088;
+    background: #3a1a1a;
+    color: #f0b3a8;
+  }
+
+  .voice-mode-btn.active {
+    border-color: #5a8a3a88;
+    background: #3d5c2a22;
+    color: var(--pollen);
+  }
+
+  .input-hint { font-size: 10px; color: #ffffff15; margin-top: 8px; text-align: center; }
+
+  /* ── Error toast ── */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: #3a1a1a; border: 1px solid #e0706044;
+    color: #e8a090; font-size: 12px; padding: 10px 20px;
+    border-radius: 8px; display: none; z-index: 100;
+    animation: fadeIn 0.2s;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateX(-50%) translateY(8px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+  /* ── Responsive ── */
+  @media (max-width: 680px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .chat-header { padding: 14px 18px; }
+    .messages { padding: 18px; }
+    .input-area { padding: 12px 18px 18px; }
+    .msg-content,
+    .msg-bubble { max-width: 88%; }
+    .input-row { flex-wrap: wrap; }
+    .chat-input { width: 100%; }
+    .voice-btn,
+    .voice-mode-btn,
+    .send-btn {
+      min-height: 44px;
+      height: 44px;
+      flex: 1;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div>
+      <div class="brand-name">R<span>A</span>IZ</div>
+      <div class="brand-sub">Lifeplants · Inteligencia Ambiental</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="about-label">Sobre RAIZ</div>
+      <div class="about-text">Asistente de Lifeplants. Pregúntame sobre conservación ambiental, flora y nuestra iniciativa.</div>
+    </div>
+
+    <div class="topics">
+      <div class="about-label">Preguntas frecuentes</div>
+      <button class="topic-chip" onclick="sendQuick('¿Qué es Lifeplants y cuál es su misión?')">¿Qué es Lifeplants?</button>
+      <button class="topic-chip" onclick="sendQuick('¿Cómo puedo contribuir a la conservación desde casa?')">Conservación desde casa</button>
+      <button class="topic-chip" onclick="sendQuick('¿Cuáles son las principales amenazas a la biodiversidad en Centroamérica?')">Biodiversidad en C.A.</button>
+      <button class="topic-chip" onclick="sendQuick('¿Qué proyectos tiene Lifeplants actualmente?')">Proyectos de Lifeplants</button>
+    </div>
+
+    <div class="sidebar-footer">
+      RAIZ es un proyecto de <a href="https://lifeplants.org">Lifeplants.org</a><br>
+      Powered by Google Gemini · © 2025
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="chat-header">
+      <div class="status-dot"></div>
+      <div>
+        <div class="header-title">RAIZ</div>
+        <div class="header-sub">Asistente ambiental de Lifeplants</div>
+      </div>
+      <div class="header-status">
+        <span class="beta-pill">BETA</span>
+      </div>
+    </header>
+
+    <div class="messages" id="messages">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-glyph">⌘</div>
+        <div class="empty-text">Pregúntame sobre Lifeplants, plantas o conservación en Centroamérica.</div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <div class="input-row">
+        <textarea class="chat-input" id="chatInput" placeholder="Escribe tu pregunta..." rows="1"></textarea>
+        <button class="voice-btn" id="voiceBtn" type="button" onclick="toggleVoiceInput()">Hablar</button>
+        <button class="voice-mode-btn active" id="voiceModeBtn" type="button" onclick="toggleVoiceMode()">Voz ON</button>
+        <button class="send-btn" id="sendBtn" onclick="handleSend()">↑</button>
+      </div>
+      <div class="input-hint">Enter para enviar · Shift+Enter para nueva línea</div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── Apunta a tu Firebase Function vía rewrite ──
+  // Si usas un proyecto Firebase separado para RAIZ, cambia esto por la URL completa:
+  // const API_URL = 'https://us-central1-TU-PROYECTO.cloudfunctions.net/chat';
+  const API_URL = '/api/chat';
+  const DEFAULT_MODEL = 'mini';
+
+  let history = [];
+  let isLoading = false;
+  let isVoiceModeEnabled = true;
+  let speakingMessageId = null;
+  let recognition = null;
+  let isListening = false;
+  let lastTranscript = '';
+  let messageCounter = 0;
+
+  // ── Permanently cached female voice — resolved once, never changed ──
+  const FEMALE_NAMES = [
+    'Mónica', 'Monica', 'Paulina', 'Sabina', 'Conchita',
+    'Luciana', 'Valentina', 'Penélope', 'Penelope',
+    'Google español', 'Google Spanish',
+    'Microsoft Sabina', 'Microsoft Helena', 'Microsoft Luciana',
+  ];
+  const MALE_NAMES = [
+    'Jorge', 'Pablo', 'Diego', 'Carlos', 'Miguel',
+    'Microsoft Pablo', 'Microsoft Jorge', 'Microsoft Diego',
+  ];
+  let femaleVoice = null; // set once below — never reassigned to male
+
+  function resolveFemaleVoice() {
+    if (femaleVoice) return; // already resolved — never overwrite
+    const all = window.speechSynthesis.getVoices();
+    const es = all.filter(v => v.lang.startsWith('es'));
+
+    // 1. Label contains "female" / "mujer" / variant
+    const byLabel = es.find(v => /female|mujer|femenin/i.test(v.name));
+    if (byLabel) { femaleVoice = byLabel; return; }
+
+    // 2. Known female name fragments
+    const byName = es.find(v => FEMALE_NAMES.some(n => v.name.includes(n)));
+    if (byName) { femaleVoice = byName; return; }
+
+    // 3. Any non-male Spanish voice
+    const nonMale = es.find(v => !MALE_NAMES.some(n => v.name.includes(n)));
+    if (nonMale) { femaleVoice = nonMale; return; }
+
+    // 4. Any Spanish voice (last resort)
+    if (es.length > 0) { femaleVoice = es[0]; }
+  }
+
+  // Try immediately (Firefox / Safari already have voices on load)
+  resolveFemaleVoice();
+  // Chrome / Edge fire voiceschanged asynchronously
+  window.speechSynthesis.addEventListener('voiceschanged', resolveFemaleVoice);
+
+  // ── Init ──
+  window.addEventListener('load', () => {
+    const ta = document.getElementById('chatInput');
+    ta.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
+    });
+    ta.addEventListener('input', () => {
+      ta.style.height = 'auto';
+      ta.style.height = Math.min(ta.scrollHeight, 130) + 'px';
+    });
+    ta.focus();
+  });
+
+  function createMsgId() {
+    messageCounter += 1;
+    return `msg-${Date.now()}-${messageCounter}`;
+  }
+
+  function speechRecognitionSupported() {
+    return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  }
+
+  function stopSpeaking() {
+    window.speechSynthesis.cancel();
+    if (speakingMessageId) {
+      const active = document.querySelector(`[data-msg-id="${speakingMessageId}"] .speak-btn`);
+      if (active) active.textContent = '🔊';
+    }
+    speakingMessageId = null;
+  }
+
+  // ── speakMessage always uses the permanently cached female voice ──
+  function speakMessage(messageId, text) {
+    if (!isVoiceModeEnabled || !text) return;
+
+    if (speakingMessageId === messageId) {
+      stopSpeaking();
+      return;
+    }
+
+    stopSpeaking();
+
+    const speakBtn = document.querySelector(`[data-msg-id="${messageId}"] .speak-btn`);
+    if (speakBtn) speakBtn.textContent = '⏸';
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'es-ES';
+    utterance.rate = 1;
+    // Always feminine pitch — guaranteed regardless of voice availability.
+    utterance.pitch = 1.1;
+
+    // Use the permanently cached female voice (resolved via voiceschanged on init).
+    // This value is set once and never overwritten — always female.
+    if (femaleVoice) {
+      utterance.voice = femaleVoice;
+    }
+
+    utterance.onend = () => {
+      const currentBtn = document.querySelector(`[data-msg-id="${messageId}"] .speak-btn`);
+      if (currentBtn) currentBtn.textContent = '🔊';
+      speakingMessageId = null;
+    };
+    utterance.onerror = () => {
+      const currentBtn = document.querySelector(`[data-msg-id="${messageId}"] .speak-btn`);
+      if (currentBtn) currentBtn.textContent = '🔊';
+      speakingMessageId = null;
+      showToast('No se pudo reproducir audio en este navegador.');
+    };
+
+    speakingMessageId = messageId;
+    window.speechSynthesis.speak(utterance);
+  }
+
+
+  async function copyMessage(text, button) {
+    try {
+      await navigator.clipboard.writeText(text);
+      const original = button.textContent;
+      button.textContent = '✓';
+      setTimeout(() => { button.textContent = original; }, 1200);
+    } catch {
+      showToast('No se pudo copiar el mensaje.');
+    }
+  }
+
+  function toggleVoiceMode() {
+    isVoiceModeEnabled = !isVoiceModeEnabled;
+    const modeBtn = document.getElementById('voiceModeBtn');
+    modeBtn.classList.toggle('active', isVoiceModeEnabled);
+    modeBtn.textContent = isVoiceModeEnabled ? 'Voz ON' : 'Voz OFF';
+    if (!isVoiceModeEnabled) stopSpeaking();
+  }
+
+  function toggleVoiceInput() {
+    if (isLoading) return;
+
+    if (!speechRecognitionSupported()) {
+      showToast('Modo voz no soportado. Usa Chrome o Edge.');
+      return;
+    }
+
+    if (isListening) {
+      recognition?.stop();
+      return;
+    }
+
+    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new Recognition();
+    recognition.lang = 'es-NI';
+    recognition.interimResults = true;
+    recognition.continuous = false;
+
+    const voiceBtn = document.getElementById('voiceBtn');
+
+    recognition.onresult = (event) => {
+      const transcript = Array.from(event.results)
+        .map(result => result[0]?.transcript || '')
+        .join(' ')
+        .trim();
+
+      if (transcript) {
+        lastTranscript = transcript;
+        document.getElementById('chatInput').value = transcript;
+      }
+    };
+
+    recognition.onerror = (event) => {
+      isListening = false;
+      voiceBtn.classList.remove('active');
+      voiceBtn.textContent = 'Hablar';
+      if (event.error === 'not-allowed') {
+        showToast('Permiso de micrófono denegado.');
+      } else {
+        showToast('No se pudo capturar tu voz.');
+      }
+    };
+
+    recognition.onend = () => {
+      isListening = false;
+      voiceBtn.classList.remove('active');
+      voiceBtn.textContent = 'Hablar';
+      const transcript = lastTranscript.trim();
+      lastTranscript = '';
+      if (transcript) {
+        handleSend(transcript);
+      }
+    };
+
+    isListening = true;
+    voiceBtn.classList.add('active');
+    voiceBtn.textContent = 'Escuchando';
+    recognition.start();
+  }
+
+  // ── Send ──
+  async function requestReply(baseHistory) {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ history: baseHistory, model: DEFAULT_MODEL })
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    return data.reply;
+  }
+
+  async function handleSend(forcedText) {
+    const ta = document.getElementById('chatInput');
+    const text = (forcedText || ta.value).trim();
+    if (!text || isLoading) return;
+
+    ta.value = '';
+    ta.style.height = 'auto';
+    appendMsg('user', text);
+    const userTurnIndex = history.length;
+    history.push({ role: 'user', parts: [{ text }] });
+
+    isLoading = true;
+    document.getElementById('sendBtn').disabled = true;
+    document.getElementById('voiceBtn').disabled = true;
+    const typingEl = appendTyping();
+
+    try {
+      const reply = await requestReply(history);
+
+      typingEl.remove();
+      history.push({ role: 'model', parts: [{ text: reply }], meta: { replyTo: userTurnIndex } });
+      const modelId = createMsgId();
+      appendMsg('raiz', reply, { id: modelId, replyTo: userTurnIndex });
+      if (isVoiceModeEnabled) {
+        speakMessage(modelId, reply);
+      }
+
+    } catch (err) {
+      typingEl.remove();
+      showToast('No se pudo conectar con RAIZ. Intenta de nuevo.');
+      // Revertir el último mensaje del historial
+      history.pop();
+    } finally {
+      isLoading = false;
+      document.getElementById('sendBtn').disabled = false;
+      document.getElementById('voiceBtn').disabled = false;
+    }
+  }
+
+  async function regenerateFromTurn(userTurnIndex) {
+    if (isLoading) return;
+
+    const contextHistory = history.slice(0, userTurnIndex + 1);
+    if (!contextHistory.length) {
+      showToast('No se pudo regenerar esta respuesta.');
+      return;
+    }
+
+    isLoading = true;
+    document.getElementById('sendBtn').disabled = true;
+    document.getElementById('voiceBtn').disabled = true;
+    const typingEl = appendTyping();
+
+    try {
+      const reply = await requestReply(contextHistory);
+      typingEl.remove();
+
+      history.push({ role: 'model', parts: [{ text: reply }], meta: { replyTo: userTurnIndex } });
+      const modelId = createMsgId();
+      appendMsg('raiz', reply, { id: modelId, replyTo: userTurnIndex });
+
+      if (isVoiceModeEnabled) {
+        speakMessage(modelId, reply);
+      }
+    } catch {
+      typingEl.remove();
+      showToast('No se pudo regenerar la respuesta.');
+    } finally {
+      isLoading = false;
+      document.getElementById('sendBtn').disabled = false;
+      document.getElementById('voiceBtn').disabled = false;
+    }
+  }
+
+  function sendQuick(text) {
+    document.getElementById('chatInput').value = text;
+    handleSend();
+  }
+
+  // ── DOM helpers ──
+  function appendMsg(sender, text, options = {}) {
+    const empty = document.getElementById('emptyState');
+    if (empty) empty.remove();
+
+    const msgs = document.getElementById('messages');
+    const div = document.createElement('div');
+    div.className = `msg ${sender}`;
+    if (options.id) {
+      div.dataset.msgId = options.id;
+    }
+
+    const avatar = document.createElement('div');
+    avatar.className = 'msg-avatar';
+    avatar.textContent = sender === 'raiz' ? 'R' : 'tú';
+
+    const content = document.createElement('div');
+    content.className = 'msg-content';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble';
+    bubble.textContent = text;
+
+    content.appendChild(bubble);
+
+    if (sender === 'raiz') {
+      const actions = document.createElement('div');
+      actions.className = 'msg-actions';
+
+      const speakBtn = document.createElement('button');
+      speakBtn.className = 'msg-action-btn speak-btn';
+      speakBtn.type = 'button';
+      speakBtn.textContent = '🔊';
+      speakBtn.title = 'Reproducir o pausar voz';
+      speakBtn.onclick = () => speakMessage(options.id, text);
+
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'msg-action-btn';
+      copyBtn.type = 'button';
+      copyBtn.textContent = '⧉';
+      copyBtn.title = 'Copiar respuesta';
+      copyBtn.onclick = () => copyMessage(text, copyBtn);
+
+      const regenBtn = document.createElement('button');
+      regenBtn.className = 'msg-action-btn';
+      regenBtn.type = 'button';
+      regenBtn.textContent = '↻';
+      regenBtn.title = 'Regenerar respuesta';
+      regenBtn.onclick = () => regenerateFromTurn(options.replyTo);
+
+      actions.appendChild(speakBtn);
+      actions.appendChild(copyBtn);
+      actions.appendChild(regenBtn);
+      content.appendChild(actions);
+    }
+
+    div.appendChild(avatar);
+    div.appendChild(content);
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return div;
+  }
+
+  function appendTyping() {
+    const empty = document.getElementById('emptyState');
+    if (empty) empty.remove();
+
+    const msgs = document.getElementById('messages');
+    const div = document.createElement('div');
+    div.className = 'msg raiz';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'msg-avatar';
+    avatar.textContent = 'R';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble';
+    bubble.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+
+    div.appendChild(avatar);
+    div.appendChild(bubble);
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return div;
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(() => { t.style.display = 'none'; }, 4000);
+  }
+</script>
+</body>
+</html>

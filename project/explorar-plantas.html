@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorar Plantas - LifePlants</title>
+    <link rel="icon" type="image/x-icon" href="/public/favicon.ico">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/styles/reset.css">
+    <link rel="stylesheet" href="/styles/tokens.css">
+    <link rel="stylesheet" href="/styles/theme.css">
+    <link rel="stylesheet" href="/styles/global.css">
+    <link rel="stylesheet" href="/styles/components.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header__container">
+            <div class="header__logo">
+                <a href="/">
+                    <img src="/logo.jpg" alt="LifePlants Logo" class="header__logo-icon">
+                    <span class="header__logo-text">LifePlants</span>
+                </a>
+            </div>
+            
+            <nav class="header__nav">
+                <a href="/laboratorio.html" class="header__nav-link header__nav-link--active">Laboratorio de Campo</a>
+                <a href="/#que-hacemos" class="header__nav-link">Qué Hacemos</a>
+                <a href="/#quienes-somos" class="header__nav-link">Quiénes Somos</a>
+                <a href="/eventos.html" class="header__nav-link">Eventos</a>
+                <a href="/#involucrate" class="header__nav-link">Involúcrate</a>
+            </nav>
+            
+            <div class="header__actions">
+                <a href="/donar.html" class="header__donate-btn">Donar</a>
+            </div>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="header__mobile-toggle" aria-label="Menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Page Hero -->
+        <section class="page-hero">
+            <div class="page-hero__container">
+                <h1 class="page-hero__title">Explora las Plantas</h1>
+            </div>
+        </section>
+
+        <!-- Plant Explorer Section -->
+        <section class="plant-explorer">
+            <div class="plant-explorer__container">
+                <!-- Filter Controls -->
+                <div class="plant-filters">
+                    <div class="plant-filters__header">
+                        <div class="plant-filters__search">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="plant-filters__search-icon">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                            <input 
+                                type="text" 
+                                id="plantSearch" 
+                                class="plant-filters__search-input" 
+                                placeholder="Buscar por nombre..."
+                                aria-label="Buscar plantas">
+                        </div>
+                        <button id="clearFilters" class="plant-filters__clear-btn">Limpiar Filtros</button>
+                    </div>
+
+                    <div class="plant-filters__controls">
+                        <div class="plant-filters__row">
+                            <div class="plant-filters__group">
+                                <label for="useFilter" class="plant-filters__label">Uso:</label>
+                                <select id="useFilter" class="plant-filters__select">
+                                    <option value="all">Todos</option>
+                                    <option value="medicinal">Medicinal</option>
+                                    <option value="ornamental">Ornamental</option>
+                                    <option value="alimenticio">Alimenticio</option>
+                                    <option value="industrial">Industrial</option>
+                                </select>
+                            </div>
+
+                            <div class="plant-filters__group">
+                                <label for="regionFilter" class="plant-filters__label">Región:</label>
+                                <select id="regionFilter" class="plant-filters__select">
+                                    <option value="all">Todas</option>
+                                    <option value="sudamerica">América del Sur</option>
+                                    <option value="centroamerica">Centroamérica</option>
+                                    <option value="caribe">Caribe</option>
+                                    <option value="europa">Europa</option>
+                                    <option value="asia">Asia</option>
+                                    <option value="africa">África</option>
+                                </select>
+                            </div>
+
+                            <div class="plant-filters__group">
+                                <label for="typeFilter" class="plant-filters__label">Tipo:</label>
+                                <select id="typeFilter" class="plant-filters__select">
+                                    <option value="all">Todos</option>
+                                    <option value="arbol">Árbol</option>
+                                    <option value="arbusto">Arbusto</option>
+                                    <option value="hierba">Hierba</option>
+                                    <option value="trepadora">Trepadora</option>
+                                    <option value="suculenta">Suculenta</option>
+                                </select>
+                            </div>
+
+                            <div class="plant-filters__group">
+                                <label for="sortFilter" class="plant-filters__label">Ordenar por:</label>
+                                <select id="sortFilter" class="plant-filters__select">
+                                    <option value="name-asc">Nombre (A-Z)</option>
+                                    <option value="name-desc">Nombre (Z-A)</option>
+                                    <option value="popularity">Popularidad</option>
+                                    <option value="recent">Fecha de Adición</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Summary -->
+                <div class="plant-results-summary">
+                    <p id="resultsCount" class="plant-results-summary__text">Mostrando <strong id="resultsNumber">0</strong> plantas</p>
+                </div>
+
+                <!-- Plant Grid -->
+                <div id="plantGrid" class="plant-grid">
+                    <!-- Plants will be rendered here by JavaScript -->
+                </div>
+
+                <!-- No Results Message -->
+                <div id="noResults" class="plant-no-results" style="display: none;">
+                    <div class="plant-no-results__icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </div>
+                    <h3 class="plant-no-results__title">No se encontraron plantas</h3>
+                    <p class="plant-no-results__text">Intenta ajustar tus filtros o búsqueda</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__container">
+            <div class="footer__columns">
+                <div class="footer__column">
+                    <h3 class="footer__column-title">NAVEGACION</h3>
+                    <ul class="footer__links">
+                        <li><a href="/laboratorio.html">Laboratorio</a></li>
+                        <li><a href="#identificar">Identificar</a></li>
+                        <li><a href="/donar.html">Donaciones</a></li>
+                        <li><a href="#creditos">Créditos</a></li>
+                    </ul>
+                </div>
+                <div class="footer__column">
+                    <h3 class="footer__column-title">INFORMACION</h3>
+                    <p class="footer__text">
+                        Conoce más sobre la versión actual y los cambios recientes.
+                    </p>
+                    <a href="#site-info" class="footer__link">Ver información del sitio</a>
+                </div>
+                <div class="footer__column">
+                    <h3 class="footer__column-title">SIGUENOS</h3>
+                    <div class="footer__social">
+                        <a href="https://www.instagram.com/lifeplants_org/" class="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                            </svg>
+                        </a>
+                        <a href="https://chat.whatsapp.com/CftbqRirziCDAE9VfHHVEF" class="footer__social-link" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m3 21 1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"></path>
+                                <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"></path>
+                            </svg>
+                        </a>
+                        <a href="https://www.linkedin.com/company/lifeplants/?viewAsMember=true" class="footer__social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                                <rect width="4" height="12" x="2" y="9"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <p class="footer__copyright">© 2026 LifePlants. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/scripts/app.js"></script>
+</body>
+</html>

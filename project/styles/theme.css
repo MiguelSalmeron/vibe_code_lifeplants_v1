@@ -1,0 +1,105 @@
+/* Theme Colors */
+
+:root {
+  /* Neutral colors - Dark palette */
+  --color-neutral-1: hsl(150, 8%, 8%);
+  --color-neutral-2: hsl(150, 7%, 11%);
+  --color-neutral-3: hsl(150, 6%, 14%);
+  --color-neutral-4: hsl(150, 5%, 18%);
+  --color-neutral-5: hsl(150, 4%, 24%);
+  --color-neutral-6: hsl(150, 4%, 30%);
+  --color-neutral-7: hsl(60, 3%, 44%);
+  --color-neutral-8: hsl(60, 3%, 52%);
+  --color-neutral-9: hsl(60, 4%, 62%);
+  --color-neutral-10: hsl(60, 5%, 72%);
+  --color-neutral-11: hsl(60, 8%, 82%);
+  --color-neutral-12: hsl(60, 12%, 93%);
+  
+  /* Accent colors - Green for nature and growth */
+  --color-accent-1: hsl(150, 12%, 12%);
+  --color-accent-2: hsl(150, 15%, 18%);
+  --color-accent-3: hsl(150, 18%, 22%);
+  --color-accent-4: hsl(136, 35%, 84%);
+  --color-accent-5: hsl(136, 32%, 77%);
+  --color-accent-6: hsl(136, 28%, 68%);
+  --color-accent-7: hsl(136, 25%, 56%);
+  --color-accent-8: hsl(136, 30%, 45%);
+  --color-accent-9: hsl(136, 50%, 42%);
+  --color-accent-10: hsl(136, 50%, 38%);
+  --color-accent-11: hsl(136, 55%, 28%);
+  --color-accent-12: hsl(136, 60%, 15%);
+  
+  /* Success colors - Grass green */
+  --color-success-1: hsl(116, 50%, 98%);
+  --color-success-2: hsl(116, 45%, 95%);
+  --color-success-3: hsl(116, 40%, 90%);
+  --color-success-4: hsl(116, 35%, 84%);
+  --color-success-5: hsl(116, 32%, 77%);
+  --color-success-6: hsl(116, 28%, 68%);
+  --color-success-7: hsl(116, 25%, 56%);
+  --color-success-8: hsl(116, 30%, 45%);
+  --color-success-9: hsl(116, 45%, 46%);
+  --color-success-10: hsl(116, 45%, 42%);
+  --color-success-11: hsl(116, 50%, 32%);
+  --color-success-12: hsl(116, 55%, 18%);
+  
+  /* Error colors - Red */
+  --color-error-1: hsl(0, 70%, 98%);
+  --color-error-2: hsl(0, 65%, 95%);
+  --color-error-3: hsl(0, 60%, 90%);
+  --color-error-4: hsl(0, 55%, 84%);
+  --color-error-5: hsl(0, 52%, 77%);
+  --color-error-6: hsl(0, 48%, 68%);
+  --color-error-7: hsl(0, 45%, 56%);
+  --color-error-8: hsl(0, 50%, 45%);
+  --color-error-9: hsl(0, 72%, 51%);
+  --color-error-10: hsl(0, 72%, 47%);
+  --color-error-11: hsl(0, 75%, 38%);
+  --color-error-12: hsl(0, 80%, 20%);
+  
+  /* Action colors - Orange for CTAs */
+  --color-action-1: hsl(24, 20%, 12%);
+  --color-action-2: hsl(24, 22%, 16%);
+  --color-action-3: hsl(24, 25%, 20%);
+  --color-action-4: hsl(24, 75%, 84%);
+  --color-action-5: hsl(24, 72%, 77%);
+  --color-action-6: hsl(24, 68%, 68%);
+  --color-action-7: hsl(24, 65%, 56%);
+  --color-action-8: hsl(24, 70%, 45%);
+  --color-action-9: hsl(24, 94%, 50%);
+  --color-action-10: hsl(24, 94%, 46%);
+  --color-action-11: hsl(24, 96%, 38%);
+  --color-action-12: hsl(24, 98%, 22%);
+  
+  /* Highlight colors - Sky blue */
+  --color-highlight-1: hsl(193, 80%, 98%);
+  --color-highlight-2: hsl(193, 75%, 95%);
+  --color-highlight-3: hsl(193, 70%, 90%);
+  --color-highlight-4: hsl(193, 65%, 84%);
+  --color-highlight-5: hsl(193, 62%, 77%);
+  --color-highlight-6: hsl(193, 58%, 68%);
+  --color-highlight-7: hsl(193, 55%, 56%);
+  --color-highlight-8: hsl(193, 60%, 45%);
+  --color-highlight-9: hsl(193, 85%, 56%);
+  --color-highlight-10: hsl(193, 85%, 52%);
+  --color-highlight-11: hsl(193, 90%, 42%);
+  --color-highlight-12: hsl(193, 95%, 25%);
+
+  /* ===== Semantic Tokens ===== */
+  /* Surfaces — dark mode */
+  --surface-primary: hsl(150, 10%, 10%);
+  --surface-secondary: hsl(150, 8%, 13%);
+  --surface-card: hsl(150, 8%, 16%);
+  --surface-card-hover: hsl(150, 7%, 20%);
+
+  /* Text — light on dark */
+  --text-primary: hsl(60, 10%, 85%);
+  --text-secondary: hsl(60, 6%, 65%);
+  --text-muted: hsl(60, 4%, 50%);
+  --text-heading: hsl(136, 40%, 75%);
+
+  /* Borders */
+  --border-subtle: hsl(150, 6%, 22%);
+  --border-accent: var(--color-accent-6);
+}
+

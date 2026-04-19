@@ -1,0 +1,456 @@
+.header {
+  /* Frosted glass effect with transparent background and rounded edges */
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: saturate(180%) blur(24px);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  border: none;
+  padding: var(--space-4) var(--space-6);
+  position: sticky;
+  top: var(--space-4);
+  left: var(--space-4);
+  right: var(--space-4);
+  margin: 0 auto;
+  max-width: calc(1400px - var(--space-8));
+  z-index: 50;
+  border-radius: var(--radius-6);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.06),
+    inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scroll animation - header becomes more opaque */
+.header.scrolled {
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  backdrop-filter: saturate(200%) blur(28px);
+  -webkit-backdrop-filter: saturate(200%) blur(28px);
+}
+
+/* Enhanced frosted glass for dark mode */
+:where(html.dark-theme) .header {
+  background: rgba(17, 17, 16, 0.5);
+  backdrop-filter: saturate(180%) blur(24px);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+:where(html.dark-theme) .header.scrolled {
+  background: rgba(17, 17, 16, 0.7);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  backdrop-filter: saturate(200%) blur(28px);
+  -webkit-backdrop-filter: saturate(200%) blur(28px);
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: var(--font-size-3);
+  color: #000000;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Enhanced text readability */
+  text-shadow: 0 0.5px 0.5px rgba(255, 255, 255, 0.3);
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+:where(html.dark-theme) .logo {
+  color: #ffffff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.logo:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+.logoImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--color-neutral-contrast);
+}
+
+.logo:hover .logoImage {
+  transform: rotate(5deg) scale(1.1);
+  filter: drop-shadow(0 4px 8px rgba(48, 164, 108, 0.3));
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-7);
+  flex: 1;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navLinks > li {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.navLinks > li:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.navLinks > li:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.navLinks > li:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.navLinks > li:nth-child(4) {
+  animation-delay: 0.25s;
+}
+.navLinks > li:nth-child(5) {
+  animation-delay: 0.3s;
+}
+.navLinks > li:nth-child(6) {
+  animation-delay: 0.35s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.navLink {
+  color: #000000;
+  text-decoration: none;
+  font-family: "Montserrat", sans-serif;
+  font-size: var(--font-size-1);
+  font-weight: 700;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  /* Enhanced text shadow for better readability on translucent background */
+  text-shadow: 0 0.5px 0.5px rgba(255, 255, 255, 0.3);
+}
+
+.navLink::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--color-accent-9);
+  transform: translateX(-50%);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--radius-round);
+}
+
+:where(html.dark-theme) .navLink {
+  color: #ffffff;
+  text-shadow: 0 0.5px 0.5px rgba(0, 0, 0, 0.5);
+}
+
+.navLink:hover {
+  color: var(--color-accent-11);
+  background-color: rgba(var(--color-accent-9-rgb, 48, 164, 108), 0.1);
+  transform: translateY(-2px);
+  /* Frosted glass hover effect */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.navLink:hover::before {
+  width: 80%;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.donateButton {
+  background-color: var(--color-action-9);
+  color: var(--color-action-contrast);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-4);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: var(--font-size-1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+  /* Enhanced button appearance on frosted glass */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donateButton::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.donateButton:hover {
+  background-color: var(--color-action-10);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.15),
+    0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.donateButton:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.donateButton:active {
+  transform: translateY(-1px) scale(0.98);
+  transition-duration: 0.1s;
+}
+
+.mobileMenuButton {
+  display: none;
+  background: transparent;
+  color: #000000;
+  padding: var(--space-2);
+  border-radius: var(--radius-3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+:where(html.dark-theme) .mobileMenuButton {
+  color: #ffffff;
+}
+
+.mobileMenuButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transform: scale(1.05);
+}
+
+.mobileMenuButton:active {
+  transform: scale(0.95);
+}
+
+:where(html.dark-theme) .mobileMenuButton:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.menuIcon {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobileMenuButton:hover .menuIcon {
+  transform: rotate(90deg);
+}
+
+@media (max-width: 1024px) {
+  .navLinks {
+    gap: var(--space-4);
+  }
+
+  .navLink {
+    font-size: var(--font-size-0);
+    padding: var(--space-2);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: var(--space-3) var(--space-4);
+    top: var(--space-2);
+    left: var(--space-2);
+    right: var(--space-2);
+    max-width: calc(100% - var(--space-4));
+    border-radius: var(--radius-5);
+  }
+
+  .container {
+    gap: var(--space-4);
+  }
+
+  .logo {
+    font-size: var(--font-size-2);
+  }
+
+  .logoImage {
+    width: 32px;
+    height: 32px;
+  }
+
+  .nav {
+    display: flex;
+    position: fixed;
+    top: 76px;
+    left: var(--space-2);
+    right: var(--space-2);
+    flex: initial;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-radius: var(--radius-5);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: var(--space-4);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition: all 0.25s ease;
+    z-index: 55;
+  }
+
+  :where(html.dark-theme) .nav {
+    background: rgba(17, 17, 16, 0.92);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .nav.navOpen {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .navLinks {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+
+  .navLink {
+    width: 100%;
+    text-align: center;
+    padding: var(--space-3);
+    font-size: var(--font-size-1);
+  }
+
+  .mobileMenuButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .donateButton {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-0);
+  }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 40;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.overlay.navOpen {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (max-width: 480px) {
+  .header {
+    top: var(--space-1);
+    left: var(--space-1);
+    right: var(--space-1);
+    max-width: calc(100% - var(--space-2));
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .logo {
+    font-size: var(--font-size-1);
+    gap: var(--space-2);
+  }
+
+  .logoImage {
+    width: 28px;
+    height: 28px;
+  }
+
+  .donateButton {
+    display: none;
+  }
+
+  .nav {
+    top: 64px;
+    left: var(--space-1);
+    right: var(--space-1);
+    padding: var(--space-3);
+  }
+}
