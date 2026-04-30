@@ -1,16 +1,184 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
     function isAdmin() {
-      return request.auth != null && (
+      return isSignedIn() && (
         request.auth.token.admin == true ||
         request.auth.token.email == "miguel@lifeplants.org"
       );
     }
 
+    function validEstado(value) {
+      return value in ["activo", "revocado"];
+    }
+
+    function validUuidFormat(value) {
+      return value is string
+        && value.matches('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+    }
+
+    function hasValidBaseKeys(data) {
+      return data.keys().hasOnly([
+        "uuid",
+        "nombreParticipante",
+        "fechaEmision",
+        "tipoActividad",
+        "estado",
+        "creadoPor",
+        "timestamp",
+        "firmanteId",
+        "firmanteNombre",
+        "firmanteRol",
+        "firmanteFirmaUrl",
+        "revocadoPor",
+        "fechaRevocacion"
+      ]);
+    }
+
+    function validBaseFieldTypes(data) {
+      return validUuidFormat(data.uuid)
+        && data.nombreParticipante is string
+        && data.nombreParticipante.size() > 0
+        && data.nombreParticipante.size() <= 120
+        && data.fechaEmision is timestamp
+        && data.tipoActividad is string
+        && data.tipoActividad.size() > 0
+        && data.tipoActividad.size() <= 120
+        && validEstado(data.estado)
+        && data.creadoPor is string
+        && data.creadoPor.size() > 0
+        && data.creadoPor.size() <= 160
+        && data.timestamp is timestamp
+        && (!("firmanteId" in data) || (
+          data.firmanteId is string
+          && data.firmanteId.size() > 0
+          && data.firmanteId.size() <= 120
+        ))
+        && (!("firmanteNombre" in data) || (
+          data.firmanteNombre is string
+          && data.firmanteNombre.size() > 0
+          && data.firmanteNombre.size() <= 120
+        ))
+        && (!("firmanteRol" in data) || (
+          data.firmanteRol is string
+          && data.firmanteRol.size() > 0
+          && data.firmanteRol.size() <= 120
+        ))
+        && (!("firmanteFirmaUrl" in data) || (
+          data.firmanteFirmaUrl is string
+          && data.firmanteFirmaUrl.size() > 0
+          && data.firmanteFirmaUrl.size() <= 2000
+        ))
+        && (!("revocadoPor" in data) || (
+          data.revocadoPor is string
+          && data.revocadoPor.size() > 0
+          && data.revocadoPor.size() <= 160
+        ))
+        && (!("fechaRevocacion" in data) || data.fechaRevocacion is timestamp);
+    }
+
     match /eventos/{eventId} {
-      allow read: if isAdmin() || resource.data.active == true;
+      allow read: if true;
       allow create, update, delete: if isAdmin();
+    }
+
+    match /certificados/{certId} {
+      allow read: if true;
+
+      allow create: if isAdmin()
+        && hasValidBaseKeys(request.resource.data)
+        && validBaseFieldTypes(request.resource.data)
+        && request.resource.data.uuid == certId
+        && request.resource.data.estado == "activo"
+        && !("revocadoPor" in request.resource.data)
+        && !("fechaRevocacion" in request.resource.data);
+
+      allow update: if isAdmin()
+        && hasValidBaseKeys(request.resource.data)
+        && validBaseFieldTypes(request.resource.data)
+        && request.resource.data.uuid == resource.data.uuid
+        && request.resource.data.uuid == certId
+        && !(resource.data.estado == "revocado" && request.resource.data.estado == "activo")
+        && (
+          request.resource.data.estado != "revocado"
+          || (
+            "revocadoPor" in request.resource.data
+            && request.resource.data.revocadoPor is string
+            && request.resource.data.revocadoPor.size() > 0
+            && "fechaRevocacion" in request.resource.data
+            && request.resource.data.fechaRevocacion is timestamp
+          )
+        );
+
+      allow delete: if isAdmin();
+    }
+
+    match /firmantes/{firmanteId} {
+      allow read: if isAdmin();
+
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          "nombre",
+          "rol",
+          "firmaUrl",
+          "firmaStoragePath",
+          "activo",
+          "creadoPor",
+          "timestamp",
+          "actualizadoEn"
+        ])
+        && request.resource.data.nombre is string
+        && request.resource.data.nombre.size() > 0
+        && request.resource.data.nombre.size() <= 120
+        && request.resource.data.rol is string
+        && request.resource.data.rol.size() > 0
+        && request.resource.data.rol.size() <= 120
+        && request.resource.data.firmaUrl is string
+        && request.resource.data.firmaUrl.size() > 0
+        && request.resource.data.firmaUrl.size() <= 2000
+        && request.resource.data.firmaStoragePath is string
+        && request.resource.data.firmaStoragePath.size() > 0
+        && request.resource.data.firmaStoragePath.size() <= 500
+        && request.resource.data.activo is bool
+        && request.resource.data.creadoPor is string
+        && request.resource.data.creadoPor.size() > 0
+        && request.resource.data.creadoPor.size() <= 160
+        && request.resource.data.timestamp is timestamp
+        && request.resource.data.actualizadoEn is timestamp;
+
+      allow update: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          "nombre",
+          "rol",
+          "firmaUrl",
+          "firmaStoragePath",
+          "activo",
+          "creadoPor",
+          "timestamp",
+          "actualizadoEn"
+        ])
+        && request.resource.data.nombre is string
+        && request.resource.data.nombre.size() > 0
+        && request.resource.data.nombre.size() <= 120
+        && request.resource.data.rol is string
+        && request.resource.data.rol.size() > 0
+        && request.resource.data.rol.size() <= 120
+        && request.resource.data.firmaUrl is string
+        && request.resource.data.firmaUrl.size() > 0
+        && request.resource.data.firmaUrl.size() <= 2000
+        && request.resource.data.firmaStoragePath is string
+        && request.resource.data.firmaStoragePath.size() > 0
+        && request.resource.data.firmaStoragePath.size() <= 500
+        && request.resource.data.activo is bool
+        && request.resource.data.creadoPor == resource.data.creadoPor
+        && request.resource.data.timestamp == resource.data.timestamp
+        && request.resource.data.actualizadoEn is timestamp;
+
+      allow delete: if isAdmin();
     }
   }
 }

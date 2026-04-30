@@ -266,7 +266,6 @@ export default function Eventos() {
                     ? "Cargando eventos..."
                     : "No hay eventos vigentes en esta categoría por el momento."}
                 </p>
-                {eventsError && <p className={styles.errorDetails}>{eventsError}</p>}
                 <Button variant="outline" onClick={() => setActiveFilter("todos")}>
                   Ver todos los eventos
                 </Button>

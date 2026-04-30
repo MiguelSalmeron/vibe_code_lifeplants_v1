@@ -3,7 +3,7 @@ import { Link, Outlet } from "react-router";
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signInWithPopup,
+  signInWithRedirect,
   signOut,
   type User,
 } from "firebase/auth";
@@ -21,6 +21,8 @@ interface AdminOutletContext {
   user: User;
 }
 
+const FIRESTORE_OWNER_ADMIN_EMAIL = "miguel@lifeplants.org";
+
 export default function AdminLayout() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,6 +30,7 @@ export default function AdminLayout() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isAllowlistedEmail, setIsAllowlistedEmail] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
+  const [isRedirectingGoogle, setIsRedirectingGoogle] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -49,10 +52,11 @@ export default function AdminLayout() {
         const tokenResult = await nextUser.getIdTokenResult(true);
         const approvedEmails = getConfiguredAdminEmails();
         const hasEmailAccess = approvedEmails.includes(String(nextUser.email || "").toLowerCase());
+        const hasRulesEmailAccess = String(nextUser.email || "").toLowerCase() === FIRESTORE_OWNER_ADMIN_EMAIL;
         const hasClaimAccess = tokenResult.claims.admin === true;
-
         setIsAllowlistedEmail(hasEmailAccess);
-        setIsAdmin(hasClaimAccess || hasEmailAccess);
+        // Firestore rules are the source of truth for admin operations.
+        setIsAdmin(hasClaimAccess || hasRulesEmailAccess);
       } catch {
         setIsAllowlistedEmail(false);
         setIsAdmin(false);
@@ -84,10 +88,12 @@ export default function AdminLayout() {
     }
 
     setError(null);
+    setIsRedirectingGoogle(true);
 
     try {
-      await signInWithPopup(auth, googleProvider);
+      await signInWithRedirect(auth, googleProvider);
     } catch {
+      setIsRedirectingGoogle(false);
       setError("No se pudo iniciar sesión con Google.");
     }
   };
@@ -155,8 +161,8 @@ export default function AdminLayout() {
             {error && <p className={styles.error}>{error}</p>}
             <div className={styles.actions}>
               <button type="submit">Entrar con correo</button>
-              <button type="button" className={styles.googleButton} onClick={handleGoogleLogin}>
-                Entrar con Google
+              <button type="button" className={styles.googleButton} onClick={handleGoogleLogin} disabled={isRedirectingGoogle}>
+                {isRedirectingGoogle ? "Redirigiendo..." : "Entrar con Google"}
               </button>
             </div>
           </form>
@@ -172,9 +178,14 @@ export default function AdminLayout() {
           <h1>Acceso denegado</h1>
           <p>
             {isAllowlistedEmail
-              ? "Tu correo está autorizado, pero falta el custom claim admin en tu token."
+              ? "Tu correo esta en VITE_ADMIN_EMAILS, pero falta el custom claim admin en tu token."
               : "Tu cuenta no tiene permisos de administrador."}
           </p>
+          {isAllowlistedEmail && (
+            <p>
+              Para operar el panel necesitas claim admin en Firebase Auth; la allowlist del frontend no reemplaza las reglas de Firestore.
+            </p>
+          )}
           <div className={styles.actions}>
             <Link to="/eventos" className={styles.linkButton}>
               Ir a eventos
@@ -200,6 +211,7 @@ export default function AdminLayout() {
           </div>
           <nav className={styles.nav}>
             <Link to="/admin/eventos">Eventos</Link>
+            <Link to="/admin/certificados">Certificados</Link>
             <button type="button" onClick={handleLogout}>
               Cerrar sesión
             </button>

@@ -1,0 +1,25 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.admin == true ||
+        request.auth.token.email == "miguel@lifeplants.org"
+      );
+    }
+
+    // Signature assets are public-read so PDFs and verification can render them.
+    match /firmantes/{firmanteId}/{fileName} {
+      allow read: if true;
+      allow write, delete: if isAdmin();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

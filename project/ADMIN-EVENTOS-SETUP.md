@@ -33,6 +33,20 @@ await admin.auth().setCustomUserClaims(uid, { admin: true });
 
 Después de asignar el claim, la persona debe cerrar sesión y volver a entrar.
 
+Desde la raíz del proyecto puedes ejecutarlo así:
+
+```bash
+npm run admin:set-claim -- --email tu-correo@dominio.com
+```
+
+Si tu sesión local de `gcloud` no sirve, el script también acepta un JSON de service account en una de estas variables:
+
+- `FIREBASE_SERVICE_ACCOUNT_JSON`
+- `GOOGLE_APPLICATION_CREDENTIALS_JSON`
+- `VERTEX_SERVICE_ACCOUNT_JSON`
+
+El JSON debe incluir `client_email` y `private_key`.
+
 ### Reglas de Firestore
 
 La colección `eventos` está protegida por [firestore.rules](firestore.rules):

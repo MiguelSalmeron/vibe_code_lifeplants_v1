@@ -8,8 +8,10 @@ export default [
   route("ia", "routes/identificador-plantas.tsx"),
   route("identificador-plantas", "routes/identificador-plantas-redirect.tsx"),
   route("eventos", "routes/eventos.tsx"),
+  route("verificar", "routes/verificar.tsx"),
   route("admin", "routes/admin.tsx", [
     index("routes/admin-index.tsx"),
     route("eventos", "routes/admin-eventos.tsx"),
+    route("certificados", "routes/admin-certificados.tsx"),
   ]),
 ] satisfies RouteConfig;
