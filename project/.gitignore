@@ -11,3 +11,7 @@
 .env.*.local
 
 .netlify
+
+# Secret files
+.secret.local.json
+*.secret.local.json

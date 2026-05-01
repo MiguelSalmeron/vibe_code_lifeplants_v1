@@ -1,1 +1,4 @@
 node_modules/
+# Secret files
+.secret.local.json
+*.secret.local.json
