@@ -6,10 +6,7 @@ service firebase.storage {
     }
 
     function isAdmin() {
-      return isSignedIn() && (
-        request.auth.token.admin == true ||
-        request.auth.token.email == "miguel@lifeplants.org"
-      );
+      return isSignedIn() && request.auth.token.admin == true;
     }
 
     // Signature assets are public-read so PDFs and verification can render them.

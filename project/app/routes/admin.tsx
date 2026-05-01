@@ -21,8 +21,6 @@ interface AdminOutletContext {
   user: User;
 }
 
-const FIRESTORE_OWNER_ADMIN_EMAIL = "miguel@lifeplants.org";
-
 export default function AdminLayout() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,11 +50,10 @@ export default function AdminLayout() {
         const tokenResult = await nextUser.getIdTokenResult(true);
         const approvedEmails = getConfiguredAdminEmails();
         const hasEmailAccess = approvedEmails.includes(String(nextUser.email || "").toLowerCase());
-        const hasRulesEmailAccess = String(nextUser.email || "").toLowerCase() === FIRESTORE_OWNER_ADMIN_EMAIL;
         const hasClaimAccess = tokenResult.claims.admin === true;
         setIsAllowlistedEmail(hasEmailAccess);
         // Firestore rules are the source of truth for admin operations.
-        setIsAdmin(hasClaimAccess || hasRulesEmailAccess);
+        setIsAdmin(hasClaimAccess);
       } catch {
         setIsAllowlistedEmail(false);
         setIsAdmin(false);
