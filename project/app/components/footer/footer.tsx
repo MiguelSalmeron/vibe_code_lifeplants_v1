@@ -47,8 +47,8 @@ export function Footer({ className }: FooterProps) {
 
           <div className={styles.column}>
             <h3>INFORMACIÓN</h3>
-            <p className={styles.infoText}>Versión actual: V5.0</p>
-            <p className={styles.infoText}>Fecha de desarrollo: 03/04/2026</p>
+            <p className={styles.infoText}>Versión actual: V8.3</p>
+            <p className={styles.infoText}>Fecha de desarrollo: 30/04/2026</p>
             <a href="#site-info" className={styles.infoButton}>
               Información de la página
             </a>
