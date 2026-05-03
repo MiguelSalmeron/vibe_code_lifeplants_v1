@@ -24,6 +24,8 @@ import {
 } from "lucide-react";
 import { useIsMobile } from "../hooks/use-mobile";
 import styles from "./identificador-plantas.module.css";
+import { appCheck } from "../lib/firebase";
+import { getToken } from "firebase/app-check";
 
 // ── Model selector ──
 const MODELS = [
@@ -254,9 +256,24 @@ export default function IdentificadorPlantas() {
     ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
 
   const sendHistory = async (history: ChatMessage[], model: ModelKey, signal: AbortSignal) => {
+    let appCheckToken = "";
+    if (appCheck) {
+      try {
+        const tokenResult = await getToken(appCheck, false);
+        appCheckToken = tokenResult.token;
+      } catch (err) {
+        console.warn("App Check Token fetch failed:", err);
+      }
+    }
+
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (appCheckToken) {
+      headers["X-Firebase-AppCheck"] = appCheckToken;
+    }
+
     const response = await fetch(chatEndpoint, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ history, model }),
       signal,
     });
@@ -357,9 +374,24 @@ export default function IdentificadorPlantas() {
     }
 
     try {
+      let appCheckToken = "";
+      if (appCheck) {
+        try {
+          const tokenResult = await getToken(appCheck, false);
+          appCheckToken = tokenResult.token;
+        } catch (err) {
+          console.warn("App Check Token fetch failed:", err);
+        }
+      }
+
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (appCheckToken) {
+        headers["X-Firebase-AppCheck"] = appCheckToken;
+      }
+
       const res = await fetch(ttsEndpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ text }),
       });
 

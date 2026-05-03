@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { GoogleAuthProvider, getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -19,6 +20,18 @@ const hasFirebaseConfig =
   Boolean(firebaseConfig.appId);
 
 const app = hasFirebaseConfig ? initializeApp(firebaseConfig) : null;
+
+export let appCheck: any = null;
+
+if (app && typeof window !== "undefined") {
+  if (import.meta.env.DEV) {
+    (window as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+  }
+  appCheck = initializeAppCheck(app, {
+    provider: new ReCaptchaEnterpriseProvider("TU_RECAPTCHA_SITE_KEY"),
+    isTokenAutoRefreshEnabled: true
+  });
+}
 
 export const auth = app ? getAuth(app) : null;
 export const googleProvider = new GoogleAuthProvider();
