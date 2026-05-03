@@ -1,9 +1,59 @@
 const { onRequest } = require("firebase-functions/v2/https");
 const { VertexAI } = require("@google-cloud/vertexai");
 const { TextToSpeechClient } = require("@google-cloud/text-to-speech");
+const admin = require("firebase-admin");
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
+
+if (!admin.apps.length) {
+  admin.initializeApp();
+}
+
+// --- Rate Limiting (In-Memory - Zero Cost) ---
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
+const MAX_REQUESTS_PER_WINDOW = 15;
+
+function checkRateLimit(req) {
+  const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+  const now = Date.now();
+  const record = rateLimitMap.get(ip) || { count: 0, resetTime: now + RATE_LIMIT_WINDOW_MS };
+
+  if (now > record.resetTime) {
+    record.count = 1;
+    record.resetTime = now + RATE_LIMIT_WINDOW_MS;
+  } else {
+    record.count += 1;
+  }
+
+  rateLimitMap.set(ip, record);
+
+  // Limpieza ligera para no asfixiar memoria de la instancia
+  if (rateLimitMap.size > 5000) {
+    const cleanupTime = now - RATE_LIMIT_WINDOW_MS;
+    for (const [key, val] of rateLimitMap.entries()) {
+      if (val.resetTime < cleanupTime) rateLimitMap.delete(key);
+    }
+  }
+
+  return record.count <= MAX_REQUESTS_PER_WINDOW;
+}
+
+// --- App Check Validation ---
+async function verifyAppCheck(req) {
+  if (process.env.FUNCTIONS_EMULATOR === 'true') {
+    return true;
+  }
+  const appCheckToken = req.headers['x-firebase-appcheck'];
+  if (!appCheckToken) return false;
+  try {
+    await admin.appCheck().verifyToken(appCheckToken);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
 
 const VERTEX_LOCATION =
   process.env.VERTEX_LOCATION ||
@@ -519,6 +569,13 @@ exports.chat = onRequest(
     ],
   },
   async (req, res) => {
+    if (!checkRateLimit(req)) {
+      return res.status(429).json({ error: "Demasiadas peticiones. Intenta más tarde." });
+    }
+    if (!(await verifyAppCheck(req))) {
+      return res.status(401).json({ error: "Acceso no autorizado (App Check fallido)." });
+    }
+
     // Solo POST
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Método no permitido" });
@@ -531,6 +588,10 @@ exports.chat = onRequest(
 
     if (!req.body || typeof req.body !== "object") {
       return res.status(400).json({ error: "Cuerpo de solicitud inválido" });
+    }
+
+    if (JSON.stringify(req.body).length > 50 * 1024) {
+      return res.status(413).json({ error: "Payload demasiado grande. Límite de 50KB excedido." });
     }
 
     const { history } = req.body;
@@ -602,10 +663,20 @@ exports.tts = onRequest(
     ],
   },
   async (req, res) => {
+    if (!checkRateLimit(req)) {
+      return res.status(429).json({ error: "Demasiadas peticiones. Intenta más tarde." });
+    }
+    if (!(await verifyAppCheck(req))) {
+      return res.status(401).json({ error: "Acceso no autorizado (App Check fallido)." });
+    }
+
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Método no permitido" });
     }
 
+    if (JSON.stringify(req.body || {}).length > 10 * 1024) {
+      return res.status(413).json({ error: "Payload demasiado grande." });
+    }
     const text = String(req.body?.text || "").trim().slice(0, 1000);
     if (!text) {
       return res.status(400).json({ error: "Texto vacío" });

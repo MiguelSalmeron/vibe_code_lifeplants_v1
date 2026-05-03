@@ -84,7 +84,8 @@ service cloud.firestore {
     }
 
     match /certificados/{certId} {
-      allow read: if true;
+      allow get: if (resource.data.estado == "activo") || isAdmin();
+      allow list: if isAdmin();
 
       allow create: if isAdmin()
         && hasValidBaseKeys(request.resource.data)
