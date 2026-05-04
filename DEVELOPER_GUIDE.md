@@ -105,3 +105,11 @@ El sistema visual utiliza **CSS puro acoplado a CSS Modules y variables CSS**, s
 - `typecheck`: Validación TypeScript.
 - `admin:set-claim` / `admin:clear-claim`: Scripts mediante Firebase Functions para dar/quitar roles de administrador a los usuarios por email.
 - `deploy:firestore` / `deploy:hosting` / `deploy:full`: Comandos para desplegar reglas, frontend y todas las configuraciones a la infraestructura de Firebase.
+
+## 9. Seguridad Implementada
+
+La infraestructura de Lifeplants cuenta con una serie de protecciones en Backend y Frontend para evitar el uso indebido de los servicios:
+
+- **Reglas de Firestore (PII):** Los datos sensibles de usuarios en la colección `users` están bloqueados; un usuario solo puede leer y modificar su propio documento, impidiendo consultas masivas no autorizadas.
+- **Firebase App Check con reCAPTCHA Enterprise:** El cliente web integra App Check, inyectando un token en el header `X-Firebase-AppCheck` para cada llamada a las Cloud Functions protegidas (`/api/chat` y `/api/tts`). Cuenta con resiliencia SSR y bypass local de desarrollo.
+- **Cloud Functions Rate Limit:** Las APIs de backend validan activamente el token de App Check y controlan la tasa de peticiones mediante el módulo `express-rate-limit` (limitado a 5 peticiones por minuto por IP para TTS, por ejemplo) para mitigar el agotamiento de cuotas y ataques DDoS.
